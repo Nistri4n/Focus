@@ -1,0 +1,21 @@
+{
+  "name": "FOCUS — персональный планнер",
+  "short_name": "FOCUS",
+  "description": "Задачи, привычки, проекты и финансовые цели в одной системе",
+  "lang": "ru",
+  "start_url": "./#today",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#02060c",
+  "theme_color": "#02060c",
+  "categories": ["productivity", "lifestyle", "finance"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

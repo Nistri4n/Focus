@@ -1,0 +1,9 @@
+{
+  "name": "focus-personal-planner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Персональный PWA-планнер для задач, привычек, проектов и финансов",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

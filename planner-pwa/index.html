@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#02060c" />
+    <meta name="description" content="Персональная система фокуса, привычек, проектов и финансов" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="./icon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>FOCUS — персональный планнер</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#today" aria-label="FOCUS — на главную">
+          <span class="brand-mark">F</span>
+          <span>
+            <strong>FOCUS</strong>
+            <small>personal system</small>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Основная навигация">
+          <a href="#today" data-route="today" class="nav-primary"><span>⌂</span> Сегодня</a>
+          <a href="#habits" data-route="habits"><span>◫</span> Привычки</a>
+          <a href="#tasks" data-route="tasks"><span>✓</span> Задачи</a>
+          <a href="#projects" data-route="projects" class="nav-desktop-only"><span>◇</span> Проекты</a>
+          <a href="#finance" data-route="finance" class="nav-desktop-only"><span>₽</span> Финансы</a>
+          <a href="#more" data-route="more" class="nav-mobile-only"><span>⋯</span> Ещё</a>
+          <a href="#settings" data-route="settings"><span>⚙</span> Настройки</a>
+        </nav>
+
+        <div class="sidebar-card">
+          <span class="eyebrow">РИТМ НЕДЕЛИ · ПРИВЫЧКИ</span>
+          <strong id="sidebar-score">0%</strong>
+          <div class="mini-progress"><i id="sidebar-score-bar"></i></div>
+          <p id="sidebar-context">—</p>
+        </div>
+
+        <button class="assistant-button" id="assistant-open">
+          <span class="assistant-orb">✦</span>
+          <span><strong>Подсказки</strong><small>по вашему плану</small></span>
+        </button>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="icon-button mobile-menu" id="menu-toggle" aria-label="Открыть меню">☰</button>
+          <div>
+            <span class="eyebrow" id="page-eyebrow">МОЙ ДЕНЬ</span>
+            <h1 id="page-title">Фокус на сегодня</h1>
+          </div>
+          <div class="topbar-actions">
+            <button class="date-pill" id="day-type-button">
+              <span class="status-dot"></span>
+              <span id="current-day-type">Рабочий день</span>
+            </button>
+            <div class="quick-add-wrap">
+              <button class="primary-button" id="quick-add" aria-haspopup="menu" aria-expanded="false"><span>＋</span> Добавить</button>
+              <div class="quick-add-menu" id="quick-add-menu" role="menu" hidden>
+                <button type="button" role="menuitem" data-action="open-modal" data-type="task">Задача</button>
+                <button type="button" role="menuitem" data-action="open-modal" data-type="finance">Финансовая цель</button>
+                <button type="button" role="menuitem" data-action="open-modal" data-type="project">Проект</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="route-view" id="app-view" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Мобильная навигация">
+      <a href="#today" data-route="today" class="nav-primary"><span>⌂</span><small>Сегодня</small></a>
+      <a href="#tasks" data-route="tasks"><span>✓</span><small>Задачи</small></a>
+      <a href="#habits" data-route="habits"><span>◫</span><small>Привычки</small></a>
+      <a href="#more" data-route="more" data-route-group="more"><span>⋯</span><small>Ещё</small></a>
+    </nav>
+
+    <dialog class="modal" id="entity-modal">
+      <form id="entity-form" novalidate>
+        <div class="modal-head">
+          <div>
+            <span class="eyebrow" id="modal-eyebrow">НОВАЯ ЗАПИСЬ</span>
+            <h2 id="modal-title">Добавить задачу</h2>
+          </div>
+          <button type="button" class="icon-button" id="modal-close" aria-label="Закрыть">×</button>
+        </div>
+        <div id="modal-fields" class="form-grid"></div>
+        <div class="modal-actions">
+          <button type="button" class="ghost-button" id="modal-cancel">Отмена</button>
+          <button type="submit" class="primary-button" id="modal-submit">Сохранить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="assistant-panel" id="assistant-panel">
+      <div class="assistant-head">
+        <div class="assistant-title">
+          <span class="assistant-orb">✦</span>
+          <div><span class="eyebrow">ПОДСКАЗКИ</span><h2>Ваш план под контролем</h2></div>
+        </div>
+        <button class="icon-button" id="assistant-close" aria-label="Закрыть">×</button>
+      </div>
+      <div class="assistant-chips" id="assistant-chips">
+        <button type="button" data-action="assistant-prompt" data-prompt="Что сегодня главное?">Что главное?</button>
+        <button type="button" data-action="assistant-prompt" data-prompt="Где перегруз?">Перегруз</button>
+        <button type="button" data-action="assistant-prompt" data-prompt="Обзор проектов">Проекты</button>
+        <button type="button" data-action="assistant-prompt" data-prompt="Финансы">Финансы</button>
+      </div>
+      <div class="assistant-messages" id="assistant-messages"></div>
+      <form class="assistant-input" id="assistant-form">
+        <input id="assistant-query" autocomplete="off" placeholder="Что сегодня по плану?" />
+        <button class="primary-button" aria-label="Отправить">↑</button>
+      </form>
+    </dialog>
+
+    <dialog class="modal sheet-modal" id="task-sheet">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">ЗАДАЧА</span>
+          <h2 id="task-sheet-title">—</h2>
+        </div>
+        <button class="icon-button" id="task-sheet-close" aria-label="Закрыть">×</button>
+      </div>
+      <div id="task-sheet-body" class="sheet-body"></div>
+      <div class="modal-actions sheet-actions">
+        <button class="ghost-button danger-text" type="button" id="task-sheet-cancel-task">Отменить задачу</button>
+        <button class="ghost-button" type="button" id="task-sheet-cycle">Сменить статус</button>
+        <button class="primary-button" type="button" id="task-sheet-done">Готово</button>
+      </div>
+    </dialog>
+
+    <dialog class="assistant-panel voice-agent-dialog" id="voice-agent-dialog">
+      <div class="assistant-head">
+        <div class="assistant-title">
+          <span class="assistant-orb mic-orb">🎤</span>
+          <div><span class="eyebrow">ГОЛОСОВОЙ АССИСТЕНТ</span><h2>Оформлю задачу из речи</h2></div>
+        </div>
+        <button type="button" class="icon-button" id="voice-agent-close" aria-label="Закрыть">×</button>
+      </div>
+      <p class="voice-agent-status" id="voice-agent-status">Нажмите микрофон</p>
+      <div class="voice-agent-messages" id="voice-agent-messages"></div>
+      <div class="voice-preview-box" id="voice-agent-preview-box" hidden>
+        <span class="eyebrow">ПРОВЕРЬТЕ ПЕРЕД СОЗДАНИЕМ</span>
+        <div class="voice-preview" id="voice-agent-preview"></div>
+        <p class="voice-preview-hint panel-subtitle">Поправьте поля вручную или нажмите 🎤 внизу, чтобы дополнить голосом.</p>
+        <div class="modal-actions">
+          <button type="button" class="ghost-button" id="voice-agent-cancel">Отменить черновик</button>
+          <button type="button" class="primary-button" id="voice-agent-confirm">Создать</button>
+        </div>
+      </div>
+      <form class="assistant-input voice-agent-input" id="voice-agent-form">
+        <button type="button" class="voice-mic-toggle" id="voice-agent-mic" aria-label="Записать голос">🎤</button>
+        <input id="voice-agent-input" autocomplete="off" placeholder="Или введите текст…" />
+        <button type="submit" class="primary-button" aria-label="Отправить">↑</button>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status">
+      <span id="toast-text"></span>
+      <button type="button" class="toast-action" id="toast-action" hidden>Открыть</button>
+    </div>
+    <script src="./app.js" defer></script>
+    <script src="./voice-assistant.js" defer></script>
+  </body>
+</html>
